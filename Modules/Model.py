@@ -49,8 +49,8 @@ class SmileDetectionModel:
 
         inputs = tf.keras.Input(shape=(64, 64)+(3,))
         x = data_augmentation(inputs) if data_augmentation else inputs
-        x = preprocess_input(inputs)
-        x = base_model(x, training=True)
+        x = preprocess_input(x)
+        x = base_model(x)
         x = tf.keras.layers.GlobalAveragePooling2D()(x)
         x = Dense1(x)
         x = tf.keras.activations.relu(x)
