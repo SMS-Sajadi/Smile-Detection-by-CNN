@@ -1,18 +1,17 @@
 # Importing Needed Libraries
 import cv2
-import pickle
 import sys
+import tensorflow as tf
+import numpy as np
 
 # Importing my own moduls
 from Modules.Face_Detector import face_detector_single
-from Modules.Feature_Extractor import feature_extract_single
 
 
 def main():
     # Loading the trained model
-    with open("./Model/SVM_Trained.pkl", "rb") as f:
-        svm_model = pickle.load(f)
-        print("-- Model loaded Successfully --")
+    model = tf.keras.models.load_model("Model/CNN_Trained.h5")
+    print("-- Model loaded Successfully --")
 
     # Accessing Source and writing on it
     capture = cv2.VideoCapture(capture_source)
@@ -35,14 +34,14 @@ def main():
                 # Set the locations of the face detected
                 x, y, w, h = locs[i]
 
-                # Extracting the features of the frame
-                feature = feature_extract_single(face)
-
                 # Get prediction from the model
-                output = svm_model.predict(feature)
+                face = np.expand_dims(face, axis=-1)
+                face = np.repeat(face, 3, axis=-1)
+                face = np.expand_dims(face, axis=0)
+                output = model.predict(face)[0][0]
 
                 # if smile predicted
-                if output[0] == '1':
+                if output > 0:
                     # It will show that smile is detected
                     print(f"Face {i} has smile!")
 

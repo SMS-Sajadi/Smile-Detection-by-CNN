@@ -35,7 +35,7 @@ def save_dataset_tf(images, labels, dir):
     :return:
     """
     for i in range(len(images)):
-        if labels[i] == 1:
-            cv2.imwrite(os.path.join(dir + "/1/" + i))
+        if labels[i] == '1':
+            cv2.imwrite(os.path.join(dir + "/1/" + str(i + 1) + ".jpg"), images[i])
         else:
-            cv2.imwrite(os.path.join(dir + "/0/" + i))
+            cv2.imwrite(os.path.join(dir + "/0/" + str(i + 1) + ".jpg"), images[i])
